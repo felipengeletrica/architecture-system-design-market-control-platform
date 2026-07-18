@@ -1,0 +1,98 @@
+name: ${COMPOSE_PROJECT_NAME:-architecture-market}
+
+services:
+  rabbitmq:
+    image: rabbitmq:4-management
+    hostname: rabbitmq
+    restart: unless-stopped
+
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER:-market}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD:-market}
+
+    ports:
+      - "${RABBITMQ_AMQP_PORT:-5672}:5672"
+      - "${RABBITMQ_MANAGEMENT_PORT:-15672}:15672"
+
+    volumes:
+      - rabbitmq_data:/var/lib/rabbitmq
+
+    networks:
+      - market-network
+
+    healthcheck:
+      test:
+        - CMD
+        - rabbitmq-diagnostics
+        - -q
+        - ping
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 20s
+
+  clickhouse:
+    image: clickhouse/clickhouse-server:latest
+    hostname: clickhouse
+    restart: unless-stopped
+
+    environment:
+      CLICKHOUSE_DB: ${CLICKHOUSE_DATABASE:-market}
+      CLICKHOUSE_USER: ${CLICKHOUSE_USER:-market}
+      CLICKHOUSE_PASSWORD: ${CLICKHOUSE_PASSWORD:-market}
+      CLICKHOUSE_DEFAULT_ACCESS_MANAGEMENT: "1"
+
+    ports:
+      - "${CLICKHOUSE_HTTP_PORT:-8123}:8123"
+      - "${CLICKHOUSE_NATIVE_PORT:-9000}:9000"
+
+    volumes:
+      - clickhouse_data:/var/lib/clickhouse
+
+    networks:
+      - market-network
+
+    healthcheck:
+      test:
+        - CMD-SHELL
+        - >
+          clickhouse-client
+          --user "$$CLICKHOUSE_USER"
+          --password "$$CLICKHOUSE_PASSWORD"
+          --query "SELECT 1"
+      interval: 10s
+      timeout: 5s
+      retries: 15
+      start_period: 20s
+
+  grafana:
+    image: grafana/grafana:latest
+    hostname: grafana
+    restart: unless-stopped
+
+    environment:
+      GF_SECURITY_ADMIN_USER: ${GRAFANA_ADMIN_USER:-admin}
+      GF_SECURITY_ADMIN_PASSWORD: ${GRAFANA_ADMIN_PASSWORD:-admin}
+      GF_USERS_ALLOW_SIGN_UP: "false"
+
+    ports:
+      - "${GRAFANA_PORT:-3000}:3000"
+
+    volumes:
+      - grafana_data:/var/lib/grafana
+
+    networks:
+      - market-network
+
+    depends_on:
+      clickhouse:
+        condition: service_healthy
+
+networks:
+  market-network:
+    driver: bridge
+
+volumes:
+  rabbitmq_data:
+  clickhouse_data:
+  grafana_data:
