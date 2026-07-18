@@ -497,3 +497,36 @@ A evolução planejada é:
 ## Aviso
 
 Este projeto é destinado a estudo de arquitetura, processamento de dados e controle preditivo. Nenhuma ordem real de compra ou venda é enviada a corretoras nesta etapa.
+---
+
+## Debug do coletor no PyCharm
+
+O coletor orientado a classes está em:
+
+```text
+services/data-collector
+```
+
+A documentação completa de instalação, variáveis, breakpoints, RabbitMQ e
+ClickHouse está em:
+
+```text
+services/data-collector/README.md
+```
+
+O projeto também inclui uma configuração compartilhada:
+
+```text
+.run/Collector - Debug PETR4.run.xml
+```
+
+Para o primeiro teste, mantenha a infraestrutura Docker ativa e execute o
+coletor localmente no PyCharm com:
+
+```text
+RUN_ONCE=true
+SYMBOL_FILTER=PETR4.SA
+MAX_ASSETS=1
+PUBLISH_ENABLED=true
+RABBITMQ_URL=amqp://market:market@localhost:5672/%2F
+```
