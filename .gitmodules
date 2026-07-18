@@ -1,0 +1,32 @@
+[submodule "services/data-collector"]
+	path = services/data-collector
+	url = https://github.com/felipengeletrica/architecture-system-design-market-data-collector.git
+	branch = main
+[submodule "services/data-ingestion"]
+	path = services/data-ingestion
+	url = https://github.com/felipengeletrica/architecture-system-design-market-data-ingestion.git
+	branch = main
+[submodule "services/model-evaluation"]
+	path = services/model-evaluation
+	url = https://github.com/felipengeletrica/architecture-system-design-market-model-evaluation.git
+	branch = main
+[submodule "services/predictive-control"]
+	path = services/predictive-control
+	url = https://github.com/felipengeletrica/architecture-system-design-market-predictive-control.git
+	branch = main
+[submodule "services/fundamentals"]
+	path = services/fundamentals
+	url = https://github.com/felipengeletrica/architecture-system-design-market-fundamentals.git
+	branch = main
+[submodule "shared/event-contracts"]
+	path = shared/event-contracts
+	url = https://github.com/felipengeletrica/architecture-system-design-market-event-contracts.git
+	branch = main
+[submodule "platform/infrastructure"]
+	path = platform/infrastructure
+	url = https://github.com/felipengeletrica/architecture-system-design-market-infrastructure.git
+	branch = main
+[submodule "platform/observability"]
+	path = platform/observability
+	url = https://github.com/felipengeletrica/architecture-system-design-market-observability.git
+	branch = main
